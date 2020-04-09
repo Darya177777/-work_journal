@@ -76,12 +76,11 @@ def index():
     global_init('db/mars.sqlite')
     session = create_session()
     jobs = session.query(Jobs).all()
-    teamleaders = []
     data = []
     for j in session.query(Jobs).all():
-        teamleaders.append(j.team_leader)
-    for users in session.query(User).filter(User.id.in_(teamleaders)):
-        data.append(users.surname + ' ' + users.name)
+        for users in session.query(User).all():
+            if j.team_leader == users.id:
+                data.append(users.surname + ' ' + users.name)
     return render_template('work_journal.html', href=url_for('static', filename='css/style.css'),
                            jobs=jobs, data=data)
 
